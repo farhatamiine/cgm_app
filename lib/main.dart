@@ -26,8 +26,8 @@ void main() async {
 
   // 3. Timezone — must be initialized before WellnessService schedules notifications
   tz.initializeTimeZones();
-  final tzName = await FlutterTimezone.getLocalTimezone();
-  tz.setLocalLocation(tz.getLocation(tzName));
+  final tzInfo = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(tzInfo.identifier));
 
   // 4. Services that send notifications
   await AlertService().init();
