@@ -88,6 +88,8 @@ class WellnessService extends ChangeNotifier {
   /// Increments the water count. UI updates immediately via [notifyListeners].
   /// If [waterGoalReached], notification cancellation happens immediately.
   /// SharedPreferences write + notification reschedule are debounced 500ms.
+  /// Note: if the app is force-quit within 500ms of the last tap, the count
+  /// may not persist (debounce window not yet elapsed).
   Future<void> addGlass() async {
     if (_waterCount >= _waterGoal * 2) return;
     _waterCount++;
@@ -121,6 +123,8 @@ class WellnessService extends ChangeNotifier {
     // Validate
     if (![1, 2, 3, 4].contains(intervalHours)) return;
     if (endHour <= startHour) return;
+    if (startHour < 0 || startHour > 23) return;
+    if (endHour < 0 || endHour > 23) return;
 
     _waterGoal = goal.clamp(1, 20);
     _waterEnabled = enabled;
@@ -222,6 +226,7 @@ class WellnessService extends ChangeNotifier {
   }
 
   Future<void> _scheduleAllNotifications() async {
+    await _cancelAllVitaminNotifications(); // prevent double-scheduling on re-init
     if (_waterEnabled) await _scheduleWaterNotifications();
     for (int i = 0; i < _vitamins.length; i++) {
       await _scheduleVitaminNotification(_vitamins[i], i);
@@ -309,5 +314,11 @@ class WellnessService extends ChangeNotifier {
     } catch (e) {
       debugPrint('[Wellness] Failed to schedule notification $id: $e');
     }
+  }
+
+  @override
+  void dispose() {
+    _saveDebounce?.cancel();
+    super.dispose();
   }
 }
