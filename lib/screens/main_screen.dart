@@ -5,7 +5,6 @@ import 'home_screen.dart';
 import 'log_hub_screen.dart';
 import 'statistics_screen.dart';
 import 'ai_insights_screen.dart';
-import 'activity_screen.dart';
 import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -23,7 +22,6 @@ class _MainScreenState extends State<MainScreen> {
     const LogHubScreen(),
     const StatisticsScreen(),
     const AiInsightsScreen(),
-    const ActivityScreen(),
     const ProfileScreen(),
   ];
 
@@ -68,8 +66,7 @@ class _MainScreenState extends State<MainScreen> {
                 _navItem(1, Icons.add_circle_outline_rounded, 'LOG'),
                 _navItem(2, Icons.bar_chart_rounded, 'STATS'),
                 _navItem(3, Icons.auto_awesome_rounded, 'AI'),
-                _navItem(4, Icons.directions_run_rounded, 'ACTIVE'),
-                _navItem(5, Icons.person_outline_rounded, 'PROFILE'),
+                _navItem(4, Icons.person_outline_rounded, 'PROFILE'),
               ],
             ),
           ),
